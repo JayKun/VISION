@@ -1,11 +1,13 @@
 var gcloud = require('gcloud');
 var fs = require('fs');
+var _ = require('lodash');
+
 var gvision = gcloud.vision({
     projectId: 'e96--1282',
     keyFilename: './key.json'
 });
 
-var img = fs.readFile("./img.jpg", function(err, data) {
+var img = fs.readFile("./WaterBottle.jpg", function(err, data){
     var imgb64 = data.toString('base64');
     var annotateImageReq = {
         "image": {
@@ -18,7 +20,14 @@ var img = fs.readFile("./img.jpg", function(err, data) {
         ]
     };
 
+    console.log("Polling Vision API...");
+
     gvision.annotate(annotateImageReq, function(err, annotations, apiResponse) {
-       console.log(annotations);
+      console.log("Done!\n");
+      _.forEach(annotations[1] ,function(val) {
+        _.forEach(val, function(v) {
+          console.log(v.description);
+        })
+      });
     });
 });
